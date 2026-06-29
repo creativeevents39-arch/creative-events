@@ -446,7 +446,7 @@ document.querySelectorAll('img').forEach(function(i){
                 mobImgs[curImgIdx].classList.remove('active');
                 curImgIdx = (curImgIdx + 1) % mobImgs.length;
                 mobImgs[curImgIdx].classList.add('active');
-            }, 4000);
+            }, 3800);
         }
     }
 
