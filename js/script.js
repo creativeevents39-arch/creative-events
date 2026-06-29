@@ -437,17 +437,15 @@ document.querySelectorAll('img').forEach(function(i){
     }
 })();
 
-    // Mobile Image Slideshow Loop (runs if screen is mobile)
-    if (window.innerWidth < 768) {
-        var mobImgs = document.querySelectorAll('.hero__reel--mobile .hero__img-mob');
-        if (mobImgs.length > 0) {
-            var curImgIdx = 0;
-            mobSlideshowInterval = setInterval(function() {
-                mobImgs[curImgIdx].classList.remove('active');
-                curImgIdx = (curImgIdx + 1) % mobImgs.length;
-                mobImgs[curImgIdx].classList.add('active');
-            }, 3800);
-        }
+    // Mobile Image Slideshow Loop (runs if mobile images exist)
+    var mobImgs = document.querySelectorAll('.hero__reel--mobile .hero__img-mob');
+    if (mobImgs.length > 0) {
+        var curImgIdx = 0;
+        mobSlideshowInterval = setInterval(function() {
+            mobImgs[curImgIdx].classList.remove('active');
+            curImgIdx = (curImgIdx + 1) % mobImgs.length;
+            mobImgs[curImgIdx].classList.add('active');
+        }, 3800);
     }
 
     // Custom Gallery Lightbox Script
