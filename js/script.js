@@ -5,6 +5,7 @@
 (function(){'use strict';
 const WA='919446134182';
 const DOM={nav:document.getElementById('nav'),burger:document.getElementById('navBurger'),menu:document.getElementById('navMenu'),menuClose:document.getElementById('navMenuClose'),form:document.getElementById('enquiryForm'),links:document.querySelectorAll('.nav__link')};
+var mobSlideshowInterval;
 
 /* === WHATSAPP === */
 function waOpen(msg){window.open('https://wa.me/'+WA+'?text='+encodeURIComponent(msg),'_blank','noopener,noreferrer');}
@@ -19,6 +20,7 @@ window.enquireService=function(svc){
     if(svc==='Birthday Event Planning') m='Hello Creative Events by Apollo, I would like to enquire about birthday event planning in Vadakara / Kozhikode. Please share your birthday celebration packages.';
     if(svc==='Corporate Event Planning') m='Hello Creative Events by Apollo, I would like to enquire about corporate event management in Vadakara / Kozhikode. Please share details about your corporate event services.';
     if(svc==='Stage Decoration') m='Hello Creative Events by Apollo, I would like to enquire about stage decoration services in Vadakara / Kozhikode. Please share your stage decoration portfolio and pricing.';
+    if(svc==='House Warming Ceremony') m='Hello Creative Events by Apollo, I would like to enquire about house warming ceremony planning and Griha Pravesh decoration in Vadakara / Kozhikode. Please share details and pricing.';
     waOpen(m);
 };
 window.enquirePortfolio=function(item){waOpen('Hello Creative Events by Apollo, I liked the '+item+' style from your portfolio. I would like to plan a similar celebration. Please share more details.');};
@@ -38,7 +40,7 @@ DOM.links.forEach(function(l){l.addEventListener('click',function(){if(DOM.menu.
 addEventListener('keydown',function(e){if(e.key==='Escape'&&DOM.menu.classList.contains('mobile-open'))cm();});
 
 /* Active nav */
-var sids=['home','services','portfolio','experience','faq','contact'],tk=false;
+var sids=['home','services','portfolio','gallery','experience','faq','contact'],tk=false;
 function hl(){var p=scrollY+DOM.nav.offsetHeight+120,c='';sids.forEach(function(id){var s=document.getElementById(id);if(s&&p>=s.offsetTop&&p<s.offsetTop+s.offsetHeight)c=id;});DOM.links.forEach(function(l){l.classList.toggle('active',l.getAttribute('href')==='#'+c);});}
 addEventListener('scroll',function(){if(!tk){requestAnimationFrame(function(){hl();tk=false;});tk=true;}},{passive:true});
 
@@ -47,7 +49,7 @@ function fd(){return{name:g('name').value.trim(),phone:g('phone').value.trim(),e
 function buildMsg(d){return['*New Event Enquiry \u2014 Creative Events by Apollo*','','*Name:* '+(d.name||'\u2014'),'*Phone:* '+(d.phone||'\u2014'),'*Event Type:* '+(d.eventType||'\u2014'),'*Event Date:* '+(d.eventDate||'\u2014'),'*Location:* '+(d.location||'\u2014'),'*Guest Count:* '+(d.guestCount||'\u2014'),'*Budget Range:* '+(d.budget||'\u2014'),'*Message:* '+(d.message||'\u2014'),'','_Sent via creativeeventsapollo.com_'].join('\n');}
 function fieldErr(id){var f=g(id);if(f){f.style.borderColor='#E8C4C0';f.style.background='#FFFBF5';setTimeout(function(){f.style.borderColor='';f.style.background='';},2600);f.focus();}}
 
-if(DOM.form){DOM.form.addEventListener('submit',function(e){e.preventDefault();var d=fd();var b=this.querySelector('button');if(!d.name){fieldErr('name');b.textContent='Please enter your name';b.style.background='#E8C4C0';b.style.color='#25211D';setTimeout(function(){b.textContent='Send to WhatsApp';b.style.background='';b.style.color='';},2200);return;}if(!d.phone){fieldErr('phone');b.textContent='Please enter your phone';b.style.background='#E8C4C0';b.style.color='#25211D';setTimeout(function(){b.textContent='Send to WhatsApp';b.style.background='';b.style.color='';},2200);return;}if(!d.eventType){fieldErr('eventType');b.textContent='Please select event type';b.style.background='#E8C4C0';b.style.color='#25211D';setTimeout(function(){b.textContent='Send to WhatsApp';b.style.background='';b.style.color='';},2200);return;}if(!d.location){fieldErr('location');b.textContent='Please enter location';b.style.background='#E8C4C0';b.style.color='#25211D';setTimeout(function(){b.textContent='Send to WhatsApp';b.style.background='';b.style.color='';},2200);return;}waOpen(buildMsg(d));});DOM.form.querySelectorAll('input,select,textarea').forEach(function(el){el.addEventListener('input',function(){this.style.borderColor='';this.style.background='';});});}
+if(DOM.form){DOM.form.addEventListener('submit',function(e){e.preventDefault();var d=fd();var b=this.querySelector('button');if(!d.name){fieldErr('name');b.textContent='Please enter your name';b.style.background='#E8C4C0';b.style.color='#25211D';setTimeout(function(){b.textContent='Send to WhatsApp';b.style.background='';b.style.color='';},2200);return;}if(!d.phone){fieldErr('phone');b.textContent='Please enter your phone';b.style.background='#E8C4C0';b.style.color='#25211D';setTimeout(function(){b.textContent='Send to WhatsApp';b.style.background='';b.style.color='';},2200);return;}if(!d.eventType){fieldErr('eventType');b.textContent='Please select event type';b.style.background='#E8C4C0';b.style.color='#25211D';setTimeout(function(){b.textContent='Send to WhatsApp';b.style.background='';b.style.color='';},2200);return;}waOpen(buildMsg(d));});DOM.form.querySelectorAll('input,select,textarea').forEach(function(el){el.addEventListener('input',function(){this.style.borderColor='';this.style.background='';});});}
 
 /* === FAQ ACCORDION === */
 document.querySelectorAll('.faq__q').forEach(function(btn){btn.addEventListener('click',function(){var item=this.parentElement,open=item.classList.contains('open');document.querySelectorAll('.faq__item').forEach(function(i){i.classList.remove('open');i.querySelector('.faq__q').setAttribute('aria-expanded','false');});if(!open){item.classList.add('open');this.setAttribute('aria-expanded','true');}});});
@@ -55,7 +57,7 @@ document.querySelectorAll('.faq__q').forEach(function(btn){btn.addEventListener(
 /* === HERO VIDEO ROTATION & LAZY LOADING === */
 var hs = document.getElementById('heroSlides');
 if (hs) {
-    var cs = 0, ts = 3, si;
+    var cs = 0, ts = 1, si;
     var dv = document.querySelectorAll('.hero__reel--desktop .hero__vid');
     var mv = document.querySelectorAll('.hero__reel--mobile .hero__vid');
     var dots = hs.querySelectorAll('.hero__slide-dot');
@@ -73,7 +75,45 @@ if (hs) {
             if (src) {
                 video.src = src;
                 video.load();
+                
+                video.addEventListener('error', function onVideoError() {
+                    var fb = video.getAttribute('data-fallback');
+                    if (fb && video.src !== fb) {
+                        console.warn("Primary video failed, falling back to: " + fb);
+                        video.src = fb;
+                        video.load();
+                        video.play().catch(function(e) {
+                            console.warn("Fallback video play failed: ", e);
+                        });
+                    }
+                    video.removeEventListener('error', onVideoError);
+                });
             }
+        }
+
+        if (window.innerWidth < 768 && video.closest('.hero__reel--mobile')) {
+            var videoStarted = false;
+            var minDelayElapsed = false;
+            
+            function showMobileVideo() {
+                if (videoStarted && minDelayElapsed) {
+                    video.classList.add('video-ready');
+                    if (mobSlideshowInterval) {
+                        clearInterval(mobSlideshowInterval);
+                    }
+                }
+            }
+            
+            video.addEventListener('playing', function onVideoPlaying() {
+                videoStarted = true;
+                showMobileVideo();
+                video.removeEventListener('playing', onVideoPlaying);
+            });
+            
+            setTimeout(function() {
+                minDelayElapsed = true;
+                showMobileVideo();
+            }, 7700);
         }
 
         var playPromise = video.play();
@@ -142,7 +182,9 @@ if (hs) {
 
     // Initialize Hero Videos
     updateHeroVideos();
-    si = setInterval(rotateSlide, 6000);
+    if (ts > 1) {
+        si = setInterval(rotateSlide, 6000);
+    }
 
     // Click navigation dots
     dots.forEach(function(dot) {
@@ -252,10 +294,9 @@ document.querySelectorAll('img').forEach(function(i){i.addEventListener('error',
     if (preloader) {
         var progress = 10;
         var statusTexts = [
-            { limit: 35, text: "Inspiring Ideas..." },
-            { limit: 65, text: "Setting The Stage..." },
-            { limit: 90, text: "Polishing Details..." },
-            { limit: 99, text: "Ready..." },
+            { limit: 40, text: "Loading..." },
+            { limit: 75, text: "Preparing your celebration..." },
+            { limit: 95, text: "Almost ready..." },
             { limit: 100, text: "Welcome" }
         ];
 
@@ -287,7 +328,7 @@ document.querySelectorAll('img').forEach(function(i){i.addEventListener('error',
         }, 120);
 
         // Listen to the first active video ready state
-        var activeVideo = document.querySelector('.hero__vid--active');
+        var activeVideo = window.innerWidth < 768 ? null : document.querySelector('.hero__reel--desktop .hero__vid--active');
         if (activeVideo) {
             activeVideo.addEventListener('canplay', function onVideoCanPlay() {
                 setProgress(100);
@@ -303,6 +344,179 @@ document.querySelectorAll('img').forEach(function(i){i.addEventListener('error',
         });
     }
 })();
+
+    // Mobile Image Slideshow Loop (runs if screen is mobile)
+    if (window.innerWidth < 768) {
+        var mobImgs = document.querySelectorAll('.hero__reel--mobile .hero__img-mob');
+        if (mobImgs.length > 0) {
+            var curImgIdx = 0;
+            mobSlideshowInterval = setInterval(function() {
+                mobImgs[curImgIdx].classList.remove('active');
+                curImgIdx = (curImgIdx + 1) % mobImgs.length;
+                mobImgs[curImgIdx].classList.add('active');
+            }, 700);
+        }
+    }
+
+    // Custom Gallery Lightbox Script
+    var lightbox = document.getElementById('lightbox');
+    var lightboxClose = document.getElementById('lightboxClose');
+    var lightboxImg = document.getElementById('lightboxImg');
+    var lightboxVid = document.getElementById('lightboxVid');
+    
+    if (lightbox && lightboxClose && lightboxImg && lightboxVid) {
+        document.querySelectorAll('.gallery__item').forEach(function(item) {
+            item.addEventListener('click', function() {
+                var type = this.getAttribute('data-media-type');
+                var src = this.getAttribute('data-media-src');
+                
+                if (type === 'image') {
+                    lightboxImg.src = src;
+                    lightboxImg.style.display = 'block';
+                    lightboxVid.style.display = 'none';
+                    lightboxVid.src = '';
+                } else if (type === 'video') {
+                    if (window.innerWidth < 768) {
+                        var mobSrc = this.getAttribute('data-media-src-mobile');
+                        if (mobSrc) {
+                            src = mobSrc;
+                        }
+                    }
+                    lightboxVid.src = src;
+                    lightboxVid.style.display = 'block';
+                    lightboxImg.style.display = 'none';
+                    lightboxImg.src = '';
+                    lightboxVid.play().catch(function(e) {
+                        console.warn("Lightbox video autoplay failed: ", e);
+                    });
+                }
+                
+                lightbox.classList.add('active');
+                lightbox.setAttribute('aria-hidden', 'false');
+                document.body.style.overflow = 'hidden';
+            });
+        });
+        
+        function closeLightbox() {
+            lightbox.classList.remove('active');
+            lightbox.setAttribute('aria-hidden', 'true');
+            document.body.style.overflow = '';
+            lightboxImg.src = '';
+            lightboxVid.pause();
+            lightboxVid.src = '';
+        }
+        
+        lightboxClose.addEventListener('click', closeLightbox);
+        
+        lightbox.addEventListener('click', function(e) {
+            if (e.target === lightbox || e.target.classList.contains('lightbox__content')) {
+                closeLightbox();
+            }
+        });
+        
+        window.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && lightbox.classList.contains('active')) {
+                closeLightbox();
+            }
+        });
+    }
+
+    // Reusable Scroll Reveal Observer
+    if ('IntersectionObserver' in window) {
+        var revealObserver = new IntersectionObserver(function(entries, observer) {
+            var toReveal = [];
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting) {
+                    toReveal.push(entry.target);
+                    observer.unobserve(entry.target);
+                }
+            });
+            if (toReveal.length > 0) {
+                var isMobile = window.innerWidth <= 640;
+                toReveal.forEach(function(el, idx) {
+                    if (isMobile) {
+                        setTimeout(function() {
+                            el.classList.add('revealed');
+                        }, idx * 70);
+                    } else {
+                        el.classList.add('revealed');
+                    }
+                });
+            }
+        }, { threshold: 0.12 });
+
+        document.querySelectorAll('[data-reveal]').forEach(function(el) {
+            revealObserver.observe(el);
+        });
+    } else {
+        // Fallback for older browsers
+        document.querySelectorAll('[data-reveal]').forEach(function(el) {
+            el.classList.add('revealed');
+        });
+    }
+
+    // Stats Count Up Animation
+    function animateCount(el) {
+        var target = parseFloat(el.getAttribute('data-target'));
+        var suffix = el.getAttribute('data-suffix') || "";
+        var decimals = parseInt(el.getAttribute('data-decimal') || "0", 10);
+        var duration = 2200;
+        var startTime = performance.now();
+
+        function update(currentTime) {
+            var progress = Math.min((currentTime - startTime) / duration, 1);
+            var eased = 1 - Math.pow(1 - progress, 3);
+            var current = target * eased;
+            el.textContent = current.toFixed(decimals) + suffix;
+
+            if (progress < 1) {
+                requestAnimationFrame(update);
+            } else {
+                el.textContent = target.toFixed(decimals) + suffix;
+            }
+        }
+        requestAnimationFrame(update);
+    }
+
+    var countItems = document.querySelectorAll(".count-up");
+    if (countItems.length > 0) {
+        if ('IntersectionObserver' in window) {
+            var countObserver = new IntersectionObserver(function(entries) {
+                entries.forEach(function(entry) {
+                    if (entry.isIntersecting) {
+                        var el = entry.target;
+                        if (el.getAttribute('data-counted') === "true") return;
+                        el.setAttribute('data-counted', "true");
+                        animateCount(el);
+                        countObserver.unobserve(el);
+                    }
+                });
+            }, { threshold: 0.5 });
+
+            if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+                countItems.forEach(function(el) {
+                    var target = parseFloat(el.getAttribute('data-target'));
+                    var suffix = el.getAttribute('data-suffix') || "";
+                    var decimals = parseInt(el.getAttribute('data-decimal') || "0", 10);
+                    el.textContent = target.toFixed(decimals) + suffix;
+                    el.setAttribute('data-counted', "true");
+                });
+            } else {
+                countItems.forEach(function(item) {
+                    countObserver.observe(item);
+                });
+            }
+        } else {
+            // Fallback for older browsers
+            countItems.forEach(function(el) {
+                var target = parseFloat(el.getAttribute('data-target'));
+                var suffix = el.getAttribute('data-suffix') || "";
+                var decimals = parseInt(el.getAttribute('data-decimal') || "0", 10);
+                el.textContent = target.toFixed(decimals) + suffix;
+                el.setAttribute('data-counted', "true");
+            });
+        }
+    }
 
 addEventListener('load',function(){var v=document.querySelectorAll('video'),l=0;v.forEach(function(x){if(x.readyState>=2)l++;});console.log('%c\u2726 Creative Events by Apollo %c\u00b7 %cThe Light Smile %c\u00b7 Vadakara, Kerala','color:#B99A5F;','color:#7B746A;','font-style:italic;color:#7B746A;','font-size:0.7rem;color:#B0ACA5;');console.log('Videos loaded initially: '+l+'/'+v.length);});
 })();
