@@ -283,8 +283,29 @@ if ('IntersectionObserver' in window) {
 }
 
 /* === MEDIA FALLBACKS === */
-document.querySelectorAll('video').forEach(function(v){var n=v.getAttribute('data-name')||v.src;v.addEventListener('error',function(){console.warn('\u26A0 Video failed: '+n);var p=v.closest('.hero__stage,.local__frame,.fl__media');if(p){p.style.background='#F3D9D3';p.style.minHeight='160px';}v.style.opacity='0.15';});v.addEventListener('loadeddata',function(){console.log('\u2713 Video: '+n);});});
-document.querySelectorAll('img').forEach(function(i){i.addEventListener('error',function(){var p=i.closest('.fl__media,.svc__media');if(p){p.style.background='#FAECE8';p.style.minHeight='160px';p.style.display='flex';p.style.alignItems='center';p.style.justifyContent='center';var s=document.createElement('span');s.innerHTML='\u2727';s.style.cssText='font-size:2rem;color:#B99A5F;opacity:0.3;';i.style.display='none';p.appendChild(s);}});});
+document.querySelectorAll('video').forEach(function(v){
+    var n=v.getAttribute('data-name')||v.src;
+    v.addEventListener('error',function(){
+        console.warn('Video failed: '+n);
+        var p=v.closest('.hero__stage,.local__frame,.fl__media');
+        if(p){p.style.background='#F3D9D3';p.style.minHeight='160px';}
+        v.style.opacity='0.15';
+    });
+});
+document.querySelectorAll('img').forEach(function(i){
+    i.addEventListener('error', function onImgError(){
+        console.warn('Image failed to load: ' + i.src);
+        i.removeEventListener('error', onImgError);
+        var fallback = 'assets/images/Wedding%20Stage%20Decoration.jpeg';
+        if (i.src.indexOf(fallback) === -1) {
+            i.src = fallback;
+        } else {
+            i.style.display = 'none';
+            var slide = i.closest('.portfolio-slide');
+            if (slide) slide.remove();
+        }
+    });
+});
 
 /* === PRELOADER LOGIC === */
 (function() {
@@ -360,7 +381,7 @@ document.querySelectorAll('img').forEach(function(i){i.addEventListener('error',
                 mobImgs[curImgIdx].classList.remove('active');
                 curImgIdx = (curImgIdx + 1) % mobImgs.length;
                 mobImgs[curImgIdx].classList.add('active');
-            }, 700);
+            }, 4000);
         }
     }
 
