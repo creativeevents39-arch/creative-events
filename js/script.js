@@ -464,7 +464,8 @@ document.querySelectorAll('img').forEach(function(i){
                     lightboxImg.src = src;
                     lightboxImg.style.display = 'block';
                     lightboxVid.style.display = 'none';
-                    lightboxVid.src = '';
+                    lightboxVid.removeAttribute('src');
+                    try { lightboxVid.load(); } catch(e) {}
                 } else if (type === 'video') {
                     if (window.innerWidth < 768) {
                         var mobSrc = this.getAttribute('data-media-src-mobile');
@@ -475,7 +476,7 @@ document.querySelectorAll('img').forEach(function(i){
                     lightboxVid.src = src;
                     lightboxVid.style.display = 'block';
                     lightboxImg.style.display = 'none';
-                    lightboxImg.src = '';
+                    lightboxImg.removeAttribute('src');
                     lightboxVid.play().catch(function(e) {
                         console.warn("Lightbox video autoplay failed: ", e);
                     });
@@ -491,9 +492,10 @@ document.querySelectorAll('img').forEach(function(i){
             lightbox.classList.remove('active');
             lightbox.setAttribute('aria-hidden', 'true');
             document.body.style.overflow = '';
-            lightboxImg.src = '';
+            lightboxImg.removeAttribute('src');
             lightboxVid.pause();
-            lightboxVid.src = '';
+            lightboxVid.removeAttribute('src');
+            try { lightboxVid.load(); } catch(e) {}
         }
         
         lightboxClose.addEventListener('click', closeLightbox);
@@ -607,6 +609,5 @@ document.querySelectorAll('img').forEach(function(i){
             });
         }
     }
-
-addEventListener('load',function(){var v=document.querySelectorAll('video'),l=0;v.forEach(function(x){if(x.readyState>=2)l++;});console.log('%c\u2726 Creative Events by Apollo %c\u00b7 %cThe Light Smile %c\u00b7 Vadakara, Kerala','color:#B99A5F;','color:#7B746A;','font-style:italic;color:#7B746A;','font-size:0.7rem;color:#B0ACA5;');console.log('Videos loaded initially: '+l+'/'+v.length);});
 })();
+
