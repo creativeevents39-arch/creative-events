@@ -1,5 +1,5 @@
 /**
- * Creative Events by Apollo — The Light Smile
+ * Creative Events by Apollo
  * All Buttons, CTAs, Navigation & WhatsApp Integration
  */
 (function(){'use strict';
