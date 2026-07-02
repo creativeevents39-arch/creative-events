@@ -90,6 +90,8 @@ function tm(){DOM.menu.classList.contains('mobile-open')?cm():(DOM.menu.classLis
 function cm(){DOM.menu.classList.remove('mobile-open');DOM.nav.classList.remove('menu-open');DOM.burger.classList.remove('active');DOM.burger.setAttribute('aria-expanded','false');document.body.style.overflow='';}
 DOM.burger.addEventListener('click',tm);
 if(DOM.menuClose) DOM.menuClose.addEventListener('click',cm);
+const logo = document.querySelector('.nav__logo');
+if(logo) logo.addEventListener('click',function(){if(DOM.menu.classList.contains('mobile-open'))cm();});
 DOM.links.forEach(function(l){l.addEventListener('click',function(){if(DOM.menu.classList.contains('mobile-open'))cm();});});
 addEventListener('keydown',function(e){if(e.key==='Escape'&&DOM.menu.classList.contains('mobile-open'))cm();});
 

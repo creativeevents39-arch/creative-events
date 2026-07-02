@@ -687,8 +687,7 @@ cursor: pointer;
     .nav__menu.mobile-open .nav__link:nth-child(7) { transition-delay: 0.35s; }
     .nav__menu.mobile-open .nav__link:nth-child(8) { transition-delay: 0.4s; }
     .nav__menu.mobile-open .nav__link:hover { color:var(--brand-maroon); }
-    .nav__menu.mobile-open .nav__menu-close { display:block !important; position:absolute; top:24px; right:24px; font-size:2.2rem; color:var(--brand-maroon); background:none; border:none; cursor:pointer; line-height:1; z-index:105; transition:color 0.3s ease; }
-    .nav__menu.mobile-open .nav__menu-close:hover { color:var(--brand-green); }
+    .nav__menu.mobile-open .nav__menu-close { display:none !important; }
     .nav__btn-mob {
         display: inline-flex;
         margin-top: 12px;
